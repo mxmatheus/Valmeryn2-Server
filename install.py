@@ -25,7 +25,7 @@ def generate_auth_config(path, port, p2p_port):
 	write_lines_to_files(os.path.join(path, "CONFIG"), file_content)
 
 def generate_game_config(path, channel, core, map_allow):
-	port = 11000 + (channel * 10 + core)
+	port = 24000 + (channel * 10 + core)
 	p2p_port = 12000 + (channel * 10 + core)
 	file_content = [
 		f"HOSTNAME: channel{channel}_{core}",
@@ -106,7 +106,7 @@ print_green("> Setting up environment for AUTH...")
 auth_dir = os.path.join(GAMEDIR, "channels", "auth")
 os.makedirs(auth_dir)
 setup_links_game(auth_dir, "game_auth")
-generate_auth_config(auth_dir, 11000, 12000)
+generate_auth_config(auth_dir, 24000, 12000)
 
 ## Game Channel Setup
 

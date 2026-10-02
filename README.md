@@ -13,12 +13,26 @@ Valmeryn2 sunucusunun çalışma dosyaları, locale/quest içerikleri, proto kay
 ## Kurulum ilkeleri
 
 1. Önce server source'u derleyin ve aynı revizyondaki `game`/`db` çıktılarıyla çalışma dosyalarını hazırlayın.
-2. Test için yeni ve ayrı bir MariaDB/MySQL instance'ı ile boş proje şemaları kullanın. Önceki devir planında yeni DB için 3309 önerilmiştir; eski kurulumun 3308 portuna veya şemalarına bağlanmayın.
+2. Yeni proje veritabanı için ayrı instance/data dizini ve MySQL portu `3309` kullanın; eski kurulumun 3308 portuna veya şemalarına bağlanmayın.
 3. `share/conf` bağlantı ayarlarını yerel ortamınıza göre düzenleyin ve parolaları Git'e eklemeyin.
 4. SQL kurulumlarını yalnızca yeni boş şemalarda yedek ve doğrulama alarak uygulayın.
 5. Önce auth, DB, channel ve client bağlantısını ayrı ayrı kontrol edin.
 
-Bu çalışma ortamında şu anda yeni Valmeryn DB örneği veya oyun server süreci doğrulanmış değildir. `mxmatheus` test hesabı ve karakteri yalnızca yeni DB kurulduktan sonra oluşturulmalıdır.
+## Yerel geliştirme portları
+
+| Bileşen | Port | Ayar kaynağı |
+|---|---:|---|
+| Auth | 24000 | `install.py` auth CONFIG üreticisi |
+| CH1 ilk core | 24011 | `install.py` channel CONFIG üreticisi |
+| CH2 ilk core | 24021 | `install.py` channel CONFIG üreticisi |
+| DB game-listener | 9000 | `share/conf/db.txt` içindeki `BIND_PORT` ve `share/conf/game.txt` içindeki `DB_PORT` |
+| MySQL | 3309 | `share/conf/db.txt` içindeki `SQL_*` bağlantıları |
+
+MySQL portu auth/channel/game-listener portlarının yerine kullanılmaz. `channels/<ad>/CONFIG` dosyaları `install.py` çalıştırıldığında üretilir; installer mevcut `channels` klasörünü silip yeniden oluşturduğu için yalnızca yeni runtime kurulurken çalıştırın. CH1/CH2 dışındaki core'lar kanal numarasına göre 24000 tabanından devam eder. P2P portları ayrı olarak 12000 tabanını kullanır.
+
+SQL dump'larında MariaDB'ye özgü `ENGINE=Aria` tablolar bulunur. Bunları MySQL 5.6'ya değiştirmeden aktarmayın; hedef veritabanı motoruna göre şema uyumluluğunu belirleyip migration'ları doğrulayın.
+
+Yeni oyun tablolarını aktarmadan önce dump ve hedef motor uyumluluğunu doğrulayın. Bu depodaki SQL dump'ları `ENGINE=Aria` içerdiği için doğrudan MySQL 5.6'ya yüklenemez. `mxmatheus` test hesabı ve karakteri, uyumlu şemalar yeni instance'a aktarıldıktan sonra oluşturulmalıdır.
 
 ## Sistem durumu
 
